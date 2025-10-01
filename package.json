@@ -1,0 +1,40 @@
+{
+  "name": "tastyfruit",
+  "version": "1.0.0",
+  "private": true,
+  "description": "TastyFruit - Client App, Admin Dashboard & Shared Packages",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "setup": "node setup-dev.js",
+    "dev": "concurrently \"bun dev:client\" \"bun dev:admin\"",
+    "dev:client": "bun --cwd apps/client dev",
+    "dev:admin": "bun --cwd apps/admin dev",
+    "dev:all": "concurrently \"bun dev:client\" \"bun dev:admin\"",
+    "build": "bun run build:client && bun run build:admin",
+    "build:client": "bun --cwd apps/client build",
+    "build:admin": "bun --cwd apps/admin build",
+    "lint": "bun run lint:client && bun run lint:admin",
+    "lint:client": "bun --cwd apps/client lint",
+    "lint:admin": "bun --cwd apps/admin lint",
+    "type-check": "bun run type-check:client && bun run type-check:admin",
+    "type-check:client": "bun --cwd apps/client run type-check",
+    "type-check:admin": "bun --cwd apps/admin run type-check",
+    "clean": "bun run clean:client && bun run clean:admin",
+    "clean:client": "bun --cwd apps/client run rm -rf .next node_modules",
+    "clean:admin": "bun --cwd apps/admin run rm -rf .next node_modules",
+    "install:all": "bun install && bun --cwd apps/client install && bun --cwd apps/admin install"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2",
+    "turbo": "^1.10.0",
+    "typescript": "^5"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "bun": ">=1.0.0"
+  },
+  "packageManager": "bun@1.0.0"
+}
