@@ -1,0 +1,145 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [develop]
+
+jobs:
+  # Quality checks for all changes
+  quality-checks:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        run: bun install
+
+      - name: Type check
+        run: bun run type-check
+
+      - name: Lint
+        run: bun run lint
+
+      - name: Build all apps
+        run: bun run build
+
+  # Deploy client app
+  deploy-client:
+    needs: quality-checks
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v1
+
+      - name: Install dependencies
+        run: bun install
+
+      - name: Build client app
+        run: bun run build:client
+
+      - name: Deploy to Vercel (Production)
+        if: github.ref == 'refs/heads/main'
+        uses: amondnet/vercel-action@v25
+        with:
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+          vercel-project-id: ${{ secrets.VERCEL_CLIENT_PROJECT_ID }}
+          working-directory: ./apps/client
+          vercel-args: "--prod"
+
+      - name: Deploy to Vercel (Staging)
+        if: github.ref == 'refs/heads/develop'
+        uses: amondnet/vercel-action@v25
+        with:
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+          vercel-project-id: ${{ secrets.VERCEL_CLIENT_STAGING_PROJECT_ID }}
+          working-directory: ./apps/client
+
+  # Deploy admin app
+  deploy-admin:
+    needs: quality-checks
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v1
+
+      - name: Install dependencies
+        run: bun install
+
+      - name: Build admin app
+        run: bun run build:admin
+
+      - name: Deploy to Vercel (Production)
+        if: github.ref == 'refs/heads/main'
+        uses: amondnet/vercel-action@v25
+        with:
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+          vercel-project-id: ${{ secrets.VERCEL_ADMIN_PROJECT_ID }}
+          working-directory: ./apps/admin
+          vercel-args: "--prod"
+
+      - name: Deploy to Vercel (Staging)
+        if: github.ref == 'refs/heads/develop'
+        uses: amondnet/vercel-action@v25
+        with:
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+          vercel-project-id: ${{ secrets.VERCEL_ADMIN_STAGING_PROJECT_ID }}
+          working-directory: ./apps/admin
+
+  # Conditional deployment based on changed files
+  detect-changes:
+    runs-on: ubuntu-latest
+    outputs:
+      client-changed: ${{ steps.changes.outputs.client }}
+      admin-changed: ${{ steps.changes.outputs.admin }}
+      shared-changed: ${{ steps.changes.outputs.shared }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Detect changes
+        uses: dorny/paths-filter@v2
+        id: changes
+        with:
+          filters: |
+            client:
+              - 'apps/client/**'
+              - 'packages/**'
+            admin:
+              - 'apps/admin/**'
+              - 'packages/**'
+            shared:
+              - 'packages/**'
+
+  # Notify deployment status
+  notify:
+    needs: [deploy-client, deploy-admin]
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deployment notification
+        run: |
+          echo "Deployment completed!"
+          echo "Client deployment: ${{ needs.deploy-client.result }}"
+          echo "Admin deployment: ${{ needs.deploy-admin.result }}"

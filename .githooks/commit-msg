@@ -1,0 +1,16 @@
+#!/bin/sh
+# Git hook to validate commit messages
+
+commit_regex='^(feat|fix|docs|style|refactor|test|chore)(\(.+\))?: .{1,50}'
+
+error_msg="Aborting commit. Your commit message is invalid. Please use the format:
+<type>(<scope>): <description>
+
+Types: feat, fix, docs, style, refactor, test, chore
+Scopes: client, admin, shared, root
+Example: feat(client): add product search functionality"
+
+if ! grep -qE "$commit_regex" "$1"; then
+    echo "$error_msg" >&2
+    exit 1
+fi

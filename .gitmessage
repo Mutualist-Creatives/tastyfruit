@@ -1,0 +1,9 @@
+# <type>(<scope>): <subject>
+#
+# <body>
+#
+# <footer>
+#
+# Types: feat, fix, docs, style, refactor, test, chore
+# Scopes: client, admin, shared, root
+# Example: feat(client): add product search functionality

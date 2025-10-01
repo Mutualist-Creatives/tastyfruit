@@ -198,14 +198,28 @@ NEXTAUTH_SECRET=your-secret-key
 
 ## 📝 Contributing
 
-1. Clone repository
+### Quick Start
+
+1. Clone repository: `git clone <repo-url>`
 2. Install dependencies: `bun install`
-3. Create feature branch: `git checkout -b feature/nama-fitur`
-4. Make changes
-5. Test: `bun run type-check && bun run lint`
-6. Commit: `git commit -m "feat: deskripsi fitur"`
-7. Push: `git push origin feature/nama-fitur`
-8. Create Pull Request
+3. Setup development: `bun run setup`
+4. Setup Git hooks: `bun run setup:git`
+
+### Development Workflow
+
+1. Create feature branch: `git checkout -b feature/nama-fitur`
+2. Make changes and commit: `git commit -m "feat: deskripsi fitur"`
+3. Push and create PR: `git push origin feature/nama-fitur`
+
+### Branch Naming Convention
+
+- `feature/feature-name` - General features
+- `client/feature-name` - Client app specific
+- `admin/feature-name` - Admin app specific
+- `shared/feature-name` - Shared packages
+- `hotfix/fix-name` - Critical fixes
+
+See [BRANCHING.md](./BRANCHING.md) for detailed workflow.
 
 ## 📄 License
 

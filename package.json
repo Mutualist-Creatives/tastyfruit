@@ -9,6 +9,7 @@
   ],
   "scripts": {
     "setup": "node setup-dev.js",
+    "setup:git": "node setup-git.js",
     "dev": "concurrently \"bun dev:client\" \"bun dev:admin\"",
     "dev:client": "bun --cwd apps/client dev",
     "dev:admin": "bun --cwd apps/admin dev",

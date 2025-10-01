@@ -1,0 +1,37 @@
+#!/bin/sh
+# Git hook to validate branch names and run checks before push
+
+protected_branch='main'
+current_branch=$(git symbolic-ref HEAD | sed -e 's,.*/\(.*\),\1,')
+
+# Prevent direct push to main
+if [ $protected_branch = $current_branch ]; then
+    echo "Direct push to main branch is not allowed. Please create a PR."
+    exit 1
+fi
+
+# Validate branch naming convention
+valid_pattern='^(feature|client|admin|shared|release|hotfix)\/[a-z0-9-]+$'
+
+if ! echo "$current_branch" | grep -qE "$valid_pattern"; then
+    if [ "$current_branch" != "develop" ]; then
+        echo "Branch name '$current_branch' does not follow naming convention."
+        echo "Valid patterns:"
+        echo "  feature/feature-name"
+        echo "  client/feature-name"
+        echo "  admin/feature-name"
+        echo "  shared/feature-name"
+        echo "  release/vX.Y.Z"
+        echo "  hotfix/fix-name"
+        exit 1
+    fi
+fi
+
+# Run type check before push
+echo "Running type check..."
+if ! bun run type-check; then
+    echo "Type check failed. Please fix errors before pushing."
+    exit 1
+fi
+
+echo "✅ Pre-push checks passed!"
