@@ -24,11 +24,18 @@ Deploy 2 separate projects dari 1 repository menggunakan Vercel Dashboard settin
 #### **Build & Output Settings:**
 
 ```
-Build Command: cd ../.. && bun install && cd apps/client && bun run build
+Build Command: cd ../.. && bun install && bun run vercel:build:client
 Output Directory: .next
 Install Command: bun install
 Development Command: bun run dev
 Node.js Version: 18.x
+```
+
+#### **Alternative Build Commands (if above fails):**
+
+```
+Option 1: cd ../.. && bun install && cd apps/client && bun run build
+Option 2: npm install && cd apps/client && npm run build
 ```
 
 #### **Environment Variables:**
@@ -63,11 +70,18 @@ Preview Branches: develop, client/*
 #### **Build & Output Settings:**
 
 ```
-Build Command: cd ../.. && bun install && cd apps/admin && bun run build
+Build Command: cd ../.. && bun install && bun run vercel:build:admin
 Output Directory: .next
 Install Command: bun install
 Development Command: bun run dev
 Node.js Version: 18.x
+```
+
+#### **Alternative Build Commands (if above fails):**
+
+```
+Option 1: cd ../.. && bun install && cd apps/admin && bun run build
+Option 2: npm install && cd apps/admin && npm run build
 ```
 
 #### **Environment Variables:**
