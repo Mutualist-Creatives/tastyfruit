@@ -19,5 +19,8 @@
       "cache": false
     }
   },
-  "globalDependencies": ["package.json", "tsconfig.json"]
+  "globalDependencies": ["package.json", "tsconfig.json"],
+  "remoteCache": {
+    "enabled": false
+  }
 }
