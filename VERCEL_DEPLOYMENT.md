@@ -31,11 +31,18 @@ Development Command: bun run dev
 Node.js Version: 18.x
 ```
 
+#### **What this command does:**
+
+- `cd ../..` - Navigate to monorepo root
+- `bun install` - Install all dependencies
+- `bun run vercel:build:client` - Runs `turbo run build --filter=client --no-cache`
+
 #### **Alternative Build Commands (if above fails):**
 
 ```
-Option 1: cd ../.. && bun install && cd apps/client && bun run build
-Option 2: npm install && cd apps/client && npm run build
+Option 1: cd ../.. && bun install && turbo run build --filter=client --no-cache
+Option 2: cd ../.. && bun install && cd apps/client && bun run build
+Option 3: npm install && cd apps/client && npm run build
 ```
 
 #### **Environment Variables:**
@@ -77,11 +84,18 @@ Development Command: bun run dev
 Node.js Version: 18.x
 ```
 
+#### **What this command does:**
+
+- `cd ../..` - Navigate to monorepo root
+- `bun install` - Install all dependencies
+- `bun run vercel:build:admin` - Runs `turbo run build --filter=admin --no-cache`
+
 #### **Alternative Build Commands (if above fails):**
 
 ```
-Option 1: cd ../.. && bun install && cd apps/admin && bun run build
-Option 2: npm install && cd apps/admin && npm run build
+Option 1: cd ../.. && bun install && turbo run build --filter=admin --no-cache
+Option 2: cd ../.. && bun install && cd apps/admin && bun run build
+Option 3: npm install && cd apps/admin && npm run build
 ```
 
 #### **Environment Variables:**
