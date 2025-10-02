@@ -1,6 +1,0 @@
-{
-  "buildCommand": "cd ../.. && bun install && turbo run build --filter=admin",
-  "installCommand": "cd ../.. && bun install",
-  "framework": "nextjs",
-  "outputDirectory": ".next"
-}
